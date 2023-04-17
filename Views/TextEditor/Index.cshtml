@@ -1,0 +1,179 @@
+﻿@model Prograd_Week_4_Assesment.Models.TextEditor;
+@{
+    ViewData["Title"] = "Text Editor";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        .editor {
+            display: inline-flex;
+            gap: 10px;
+            font-family: monospace;
+            line-height: 21px;
+            background: black;
+            border-radius: 2px;
+            padding: 20px 10px;
+        }
+
+        .line-numbers {
+            width: 20px;
+            text-align: right;
+        }
+
+            .line-numbers span {
+                counter-increment: linenumber;
+            }
+
+                .line-numbers span::before {
+                    content: counter(linenumber);
+                    display: block;
+                    color: #506882;
+                }
+
+        textarea {
+            line-height: 21px;
+            overflow-y: hidden;
+            padding: 0;
+            border: 0;
+            background: black;
+            color: #FFF;
+            min-width: 1100px;
+            min-height:400px;
+            outline: none;
+            resize: none;
+        }
+
+        .dropbtn {
+            background-color:deepskyblue;
+            color: white;
+            padding: 1px 10px;
+            font-size: 20px;
+            border: none;
+            width:50px;
+            cursor: pointer;
+        }
+
+            .dropbtn:hover, .dropbtn:focus {
+                background-color: skyblue;
+            }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 200px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }.dropdown-content button {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            
+                border:none;
+            }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }.dropdown button:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <form asp-action="Index" >
+
+        <div class="dropdown">
+            <input asp-for=filename class="col-form-label-sm" />
+            <input role="button" onclick="myFunction()" class="dropbtn" value="File" readonly></input>
+        <div id="myDropdown" class="dropdown-content">
+            <a asp-action="NewFile">New</a>
+                <button type="submit" >Save</button>
+            <a href="contact">Contact</a>
+        </div>
+    </div>
+    <div class="editor">
+        <div class="line-numbers">
+            <span></span>
+        </div>
+        <textarea asp-for=textregion>@ViewData["TextInFile"]</textarea>
+    </div>
+
+    <script>
+        const textarea = document.querySelector('textarea')
+        const lineNumbers = document.querySelector('.line-numbers')
+            textarea.addEventListener('mouseenter', event => {
+                const numberOfLines = event.target.value.split('\n').length
+
+                lineNumbers.innerHTML = Array(numberOfLines)
+                    .fill('<span></span>')
+                    .join('')
+            })
+
+        textarea.addEventListener('keyup', event => {
+            const numberOfLines = event.target.value.split('\n').length
+
+            lineNumbers.innerHTML = Array(numberOfLines)
+                .fill('<span></span>')
+                .join('')
+        })
+
+        textarea.addEventListener('keydown', event => {
+            if (event.key === 'Tab') {
+                const start = textarea.selectionStart
+                const end = textarea.selectionEnd
+
+                textarea.value = textarea.value.substring(0, start) + '\t' + textarea.value.substring(end)
+
+                event.preventDefault()
+            }
+        })
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+        </script>
+    </form>
+</body>
+</html>
+
+
+
+   
+
+    
+ 
